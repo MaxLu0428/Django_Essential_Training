@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from .models import Notes
 from django.http import Http404
-from django.views.generic import ListView
-
+from django.views.generic import CreateView
+from .forms import NotesForm
 # Create your views here.
 
 def list(request):
@@ -15,3 +15,8 @@ def detail(request,pk):
     except:
         raise Http404("note doesn't exist")
     return render(request,'notes/note_detail.html',{'note':note})
+
+class NotesCreateView(CreateView):
+    model = Notes
+    form_class =NotesForm
+    success_url='smart/notes'
