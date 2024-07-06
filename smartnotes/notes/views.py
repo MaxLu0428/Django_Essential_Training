@@ -1,20 +1,25 @@
 from django.shortcuts import render
 from .models import Notes
 from django.http import Http404
-from django.views.generic import CreateView,UpdateView
+from django.views.generic import CreateView,UpdateView,ListView,DetailView
+from django.views.generic.edit import DeleteView
 from .forms import NotesForm
 # Create your views here.
 
-def list(request):
-    notes = Notes.objects.all()
-    return render(request,'notes/note_list.html',{'notes':notes})
+class NotesDeleteView(DeleteView):
+    model = Notes
+    success_url = '/smart/notes'
+    template_name = 'notes/note_delete.html'
 
-def detail(request,pk):
-    try:
-        note = Notes.objects.get(pk=pk)
-    except:
-        raise Http404("note doesn't exist")
-    return render(request,'notes/note_detail.html',{'note':note})
+class NotesListView(ListView):
+    model = Notes
+    context_object_name='notes'
+    template_name = 'notes/note_list.html'
+
+class NotesDetailView(DetailView):
+    model = Notes
+    context_object_name='note'
+    template_name='notes/note_detail.html'
 
 class NotesCreateView(CreateView):
     model = Notes
